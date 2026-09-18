@@ -61,3 +61,31 @@ def test_socket_client_roundtrip():
         c.close()
     finally:
         srv.shutdown()
+
+
+def test_llm_planner_reserves_a_call_for_triage(monkeypatch):
+    """Exploration may use at most max_calls-1; triage always gets the last one."""
+    import sys
+    import types
+
+    from playtest_agent.agent import llm as L
+
+    calls = []
+
+    class _Resp:
+        content = [types.SimpleNamespace(type="text", text='{"items": [{"i": 0, "severity": "low", "hypothesis": "h", "duplicate_of": null}]}')]
+
+    class _Msgs:
+        def create(self, **kw):
+            calls.append(kw)
+            return _Resp()
+
+    fake = types.SimpleNamespace(Anthropic=lambda: types.SimpleNamespace(messages=_Msgs()))
+    monkeypatch.setitem(sys.modules, "anthropic", fake)
+    pl = L.LLMPlanner(max_calls=3)
+    for _ in range(5):
+        pl.suggest("", {}, [], "x")
+    assert len(calls) == 2  # exploration capped at max_calls-1
+    from playtest_agent.agent.detectors import Finding
+    out = pl.triage([Finding("k", "high", "t", "d", 0, 1, {})])
+    assert len(calls) == 3 and out[0].hypothesis == "h" and out[0].severity == "low"

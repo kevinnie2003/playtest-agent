@@ -1,0 +1,111 @@
+{
+  "bugs": [
+    {
+      "bug": "door_ignores_key",
+      "detected": true,
+      "kinds_found": [
+        "door_no_key"
+      ],
+      "steps_to_detect": 63,
+      "total_steps": 969,
+      "coverage": 0.9702970297029703,
+      "seconds": 130.11
+    },
+    {
+      "bug": "east_wall_missing",
+      "detected": true,
+      "kinds_found": [
+        "clip_through_wall"
+      ],
+      "steps_to_detect": 124,
+      "total_steps": 1500,
+      "coverage": 0.7722772277227723,
+      "seconds": 40.12
+    },
+    {
+      "bug": "potion_no_consume_check",
+      "detected": true,
+      "kinds_found": [
+        "wasted_resource"
+      ],
+      "steps_to_detect": 1,
+      "total_steps": 852,
+      "coverage": 0.9603960396039604,
+      "seconds": 0.18
+    },
+    {
+      "bug": "shop_allows_negative_gold",
+      "detected": true,
+      "kinds_found": [
+        "negative_gold",
+        "purchase_without_funds"
+      ],
+      "steps_to_detect": 112,
+      "total_steps": 934,
+      "coverage": 0.9603960396039604,
+      "seconds": 0.2
+    },
+    {
+      "bug": "player_invulnerable",
+      "detected": true,
+      "kinds_found": [
+        "damage_no_effect"
+      ],
+      "steps_to_detect": 283,
+      "total_steps": 958,
+      "coverage": 0.9603960396039604,
+      "seconds": 0.2
+    },
+    {
+      "bug": "softlock_after_turns",
+      "detected": true,
+      "kinds_found": [
+        "softlock"
+      ],
+      "steps_to_detect": 46,
+      "total_steps": 1500,
+      "coverage": 0.37623762376237624,
+      "seconds": 0.3
+    },
+    {
+      "bug": "key_overflow_crash",
+      "detected": true,
+      "kinds_found": [
+        "crash"
+      ],
+      "steps_to_detect": 320,
+      "total_steps": 650,
+      "coverage": 0.9603960396039604,
+      "seconds": 0.13
+    },
+    {
+      "bug": "goal_does_not_win",
+      "detected": true,
+      "kinds_found": [
+        "unwinnable"
+      ],
+      "steps_to_detect": 162,
+      "total_steps": 1266,
+      "coverage": 1.0,
+      "seconds": 0.3
+    }
+  ],
+  "clean": {
+    "bug": "(clean)",
+    "detected": false,
+    "kinds_found": [],
+    "steps_to_detect": null,
+    "total_steps": 934,
+    "coverage": 0.9603960396039604,
+    "seconds": 0.19
+  },
+  "recall": 1.0,
+  "precision": 1.0,
+  "seeds": [
+    0,
+    1
+  ],
+  "episodes": 3,
+  "max_steps": 250,
+  "llm": true
+}

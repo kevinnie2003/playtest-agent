@@ -63,8 +63,11 @@ class LLMPlanner:
         self.max_calls = max_calls
         self.calls = 0
 
-    def _ask(self, prompt: str, max_tokens: int = 600) -> str:
-        if self.calls >= self.max_calls:
+    def _ask(self, prompt: str, max_tokens: int = 600, reserved: bool = False) -> str:
+        # One call is always held back for final triage so a long exploration
+        # cannot starve the step that explains the findings.
+        budget = self.max_calls if reserved else self.max_calls - 1
+        if self.calls >= budget:
             return ""
         self.calls += 1
         resp = self.client.messages.create(
@@ -112,7 +115,7 @@ class LLMPlanner:
             f"{json.dumps(summary, indent=1)}\n"
             'Reply as JSON: {"items": [{"i": 0, "severity": "high", "hypothesis": "...", "duplicate_of": null}]}'
         )
-        data = self._json(self._ask(prompt, max_tokens=1500))
+        data = self._json(self._ask(prompt, max_tokens=1500, reserved=True))
         keep: List[Finding] = []
         for item in data.get("items", []):
             i = item.get("i")

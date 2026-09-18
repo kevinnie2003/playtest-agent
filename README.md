@@ -39,7 +39,7 @@ pip install -e ".[dev]"          # core has zero runtime deps
 playtest run                     # play the clean game, print a report
 playtest run --bug softlock_after_turns --bug shop_allows_negative_gold --out report.md
 playtest eval                    # precision/recall table against all seeded bugs
-pytest                           # 28 tests, ~6 s
+pytest                           # 29 tests, ~6 s
 ```
 
 Drive a game over a socket, the way you would drive a real build:
@@ -59,7 +59,17 @@ export ANTHROPIC_API_KEY=...
 playtest run --llm
 ```
 
-The model is consulted only when the scripted explorer is stuck or at a periodic check-in, and once more at the end to triage findings (rank severity, write a root-cause hypothesis, drop duplicates). Cost is bounded by `max_calls`. Without a key everything degrades to the scripted policy, so evaluation stays free and reproducible.
+The model is consulted only when the scripted explorer is stuck or at a periodic check-in, and once more at the end to triage findings (rank severity, write a root-cause hypothesis, drop duplicates). Cost is bounded by `max_calls`, with one call always reserved for triage. Without a key everything degrades to the scripted policy, so evaluation stays free and reproducible.
+
+Run with `claude-sonnet-5`, 20 calls per run: recall and precision stay at 1.00 (the scripted policy already finds everything in this game), and each finding gets a one-line root cause. From [`examples/report_llm.md`](examples/report_llm.md):
+
+| finding | model's hypothesis |
+|---|---|
+| Goal tile reached but game did not end | Win-condition check is not triggered on tile entry (missing goal-tile collision/event handler) |
+| Door opened without consuming a key | Door-open logic fails to decrement key count or checks wrong door state before consuming inventory |
+| Purchase succeeded with insufficient gold | buy_potion lacks a gold>=cost guard before executing the transaction |
+
+All three are correct: they name the exact line each seeded bug removes. The first live run also exposed a bug in the agent itself: exploration consumed the whole call budget and triage silently got nothing, so every hypothesis was empty. Now fixed and covered by a test.
 
 ### As an MCP server
 
