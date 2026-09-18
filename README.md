@@ -1,5 +1,7 @@
 # playtest-agent
 
+[![ci](https://github.com/kevinnie2003/playtest-agent/actions/workflows/ci.yml/badge.svg)](https://github.com/kevinnie2003/playtest-agent/actions/workflows/ci.yml) ![python](https://img.shields.io/badge/python-3.10%2B-blue) ![license](https://img.shields.io/badge/license-MIT-green)
+
 An autonomous QA agent that **plays a game, hunts for bugs, and writes a reproducible bug report**.
 
 It drives a game purely through an observation/action interface (in-process or over a TCP socket, the way a real engine build would be driven), runs a set of *generic* bug oracles on every state transition, and produces a Markdown report with severity, root-cause hints, and an exact action sequence that reproduces each finding from reset.
