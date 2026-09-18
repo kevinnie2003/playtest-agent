@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "playtest": {
+      "command": "playtest-mcp"
+    }
+  }
+}

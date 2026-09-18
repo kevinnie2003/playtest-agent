@@ -1,0 +1,23 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e ".[dev]"
+      - run: pytest -q
+      - name: evaluate agent (precision/recall gate)
+        run: |
+          playtest eval --seeds 0 1 2 --json eval.json
+          python -c "import json; r=json.load(open('eval.json')); assert r['recall']==1.0 and r['precision']==1.0, r"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-${{ matrix.python }}
+          path: eval.json

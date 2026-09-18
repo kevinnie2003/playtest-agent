@@ -1,0 +1,29 @@
+{
+  "findings": [],
+  "episodes": [
+    {
+      "episode": 0,
+      "steps": 162,
+      "visited": 98,
+      "outcome": "won",
+      "findings": 0
+    },
+    {
+      "episode": 1,
+      "steps": 121,
+      "visited": 82,
+      "outcome": "died",
+      "findings": 0
+    },
+    {
+      "episode": 2,
+      "steps": 177,
+      "visited": 99,
+      "outcome": "won",
+      "findings": 0
+    }
+  ],
+  "total_steps": 460,
+  "llm_calls": 0,
+  "coverage": 0.9603960396039604
+}
